@@ -10,7 +10,6 @@ public class LooseCollider : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -18,7 +17,7 @@ public class LooseCollider : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        engine.GetComponent<Engine>().lifes--; //subtract life if collsion with ground
-        Destroy(collision.gameObject); //destroy fruit
+        engine.GetComponent<Engine>().lifes--;
+        Destroy(collision.gameObject);
     }
 }

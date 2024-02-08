@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using System.Diagnostics;
+using System.Text;
 using TMPro;
 using UnityEngine.SceneManagement;
-using Debug = UnityEngine.Debug;
 
 public class Engine : MonoBehaviour
 {
@@ -12,14 +11,12 @@ public class Engine : MonoBehaviour
     [SerializeField] TextMeshProUGUI lifesText;
     [SerializeField] TextMeshProUGUI timerText;
     public int score = 0;
-    [SerializeField] int scoreToGetLife = 0; //score which is needed to get extra life
-    public int LiveAdderForScore = 0; //counter for next extra life
+    [SerializeField] private int scoreToGetLife = 0;
+    public int LiveAdderForScore = 0;
     public int lifes = 3;
     [SerializeField] bool gameOver = false;
-
-    float timer;
-    float seconds;
-    float minutes;
+    
+    Stopwatch stopWatch = new Stopwatch();
 
     public bool isPaused = false;
     [SerializeField] GameObject pauseMenu;
@@ -27,10 +24,9 @@ public class Engine : MonoBehaviour
 
     void Start()
     {
-        timer = 0;
+        stopWatch.Start();
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -44,13 +40,12 @@ public class Engine : MonoBehaviour
             lifesText.text = lifes.ToString();
         }
 
-        StopWatchCalc(); //calculation for stopwatch
+        StopWatchCalc();
 
-        //pause menu system
         if (isPaused)
         {
             pauseMenu.SetActive(true);
-            Time.timeScale = 0f; //pause time when pause active
+            Time.timeScale = 0f;
         }
         else
         {
@@ -58,12 +53,11 @@ public class Engine : MonoBehaviour
             Time.timeScale = 1f;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))//enables pause when esc presed
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ChangePauseState();
         }
 
-        //adds life if extra life counter is greater than var of getting extra life
         if (LiveAdderForScore>=scoreToGetLife)
         {
             lifes++;
@@ -91,36 +85,29 @@ public class Engine : MonoBehaviour
 
     }
 
-    //stopwatch system which count play time
     void StopWatchCalc()
     {
-            timer += Time.deltaTime;
-            seconds = (int)timer % 60;
-            minutes = (int)timer / 60;
-            if (seconds < 10)
-            {
-                timerText.text = minutes.ToString() + ":0" + seconds.ToString();
-            }
-            else
-            {
-                timerText.text = minutes.ToString() + ":" + seconds.ToString();
-            }
+        var ts = TimeSpan.FromMilliseconds(stopWatch.Elapsed.TotalMilliseconds);
+        timerText.text = $"{ts.Minutes:00}:{ts.Seconds:00}";
     }
 
     public void ChangePauseState()
     {
         if (isPaused)
         {
+            stopWatch.Start();
             isPaused = false;
         }
         else
         {
+            stopWatch.Stop();
             isPaused = true;
         }
     }
 
     public void Restart()
     {
+        stopWatch.Reset();
         SceneManager.LoadScene(2);
     }
 }

@@ -10,16 +10,14 @@ public class GameOverMenu : MonoBehaviour
     [SerializeField] TextMeshProUGUI TimerTextGO;
     [SerializeField] TextMeshProUGUI TimerText;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
-        scoreText.text = engine.GetComponent<Engine>().score.ToString(); //shows score count on game over screen
-        TimerTextGO.text = TimerText.text; //shows time on game over screen
+        scoreText.text = engine.GetComponent<Engine>().score.ToString();
+        TimerTextGO.text = TimerText.text;
     }
 }

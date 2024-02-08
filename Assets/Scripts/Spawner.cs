@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] GameObject foodPrefab; //object to spawn
-    [SerializeField] float spawnPeriod = 2f; //spawn period
-    [SerializeField] float velocity = 0f; //velocity to bottom which makes game harder
-    [SerializeField] float periodAdder = 0.1f; //add more fruits every sec
+    [SerializeField] GameObject foodPrefab;
+    [SerializeField] public float spawnPeriod = 2f;
+    [SerializeField] public float velocity = 0f;
+    [SerializeField] public float periodAdder = 0.1f;
 
-    [SerializeField] Sprite[] sprites; //diffrent sprites for foods
+    [SerializeField] Sprite[] sprites;
 
-    float xMin; //min pos to spawn
-    float xMax; //max pos to spawn
+    float xMin;
+    float xMax;
     void Start()
     {
-        Camera gameCamera = Camera.main; //assign main camera to var
+        Camera gameCamera = Camera.main;
         xMin = gameCamera.ViewportToWorldPoint(new Vector3(0f, 0f, 0f)).x;
         xMax = gameCamera.ViewportToWorldPoint(new Vector3(1f, 0f, 0f)).x;
         StartCoroutine(SpawnContinuously());
@@ -23,36 +23,35 @@ public class Spawner : MonoBehaviour
 
     }
 
-    // Update is called once per frame
     void Update()
     {
     }
 
     IEnumerator SpawnContinuously()
     {
-        while (true) //make spawning endless
+        while (true)
         {
-            var spawnPosX = Random.Range(xMin, xMax); //pos to spawn randomized beetwen limits
-            GameObject food = Instantiate(foodPrefab, new Vector2(spawnPosX, 7f), Quaternion.identity); //spawning food object
-            food.GetComponent<SpriteRenderer>().sprite = sprites[Random.Range(0, sprites.Length)]; //chang sprite to random from array
-            food.GetComponent<Rigidbody2D>().velocity = new Vector2(0, velocity); //add velocity
-            yield return new WaitForSeconds(spawnPeriod); //wait until new spawn
+            var spawnPosX = Random.Range(xMin, xMax);
+            GameObject food = Instantiate(foodPrefab, new Vector2(spawnPosX, 7f), Quaternion.identity);
+            food.GetComponent<SpriteRenderer>().sprite = sprites[0];
+            food.GetComponent<Rigidbody2D>().velocity = new Vector2(0, velocity);
+            yield return new WaitForSeconds(spawnPeriod);
         }
     }
 
     IEnumerator PeriodAddEverySec()
     {
-        while (true) //endless loop
+        while (true)
         {
-            if (spawnPeriod > 0.5f) //if period is greater than 0.5 subtract period
+            if (spawnPeriod > 0.5f)
             {
-                spawnPeriod = spawnPeriod - spawnPeriod / 50; //alghoritm for decreasing period
+                spawnPeriod = spawnPeriod - spawnPeriod / 50;
             }
-            else //if not add velocity
+            else
             {
-                velocity -= 0.1f; //adds negative velocity
+                velocity -= 0.1f;
             }
-            yield return new WaitForSeconds(1f); //do it every 1 sec
+            yield return new WaitForSeconds(1f);
         }
     }
 }
